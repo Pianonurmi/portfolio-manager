@@ -1,0 +1,45 @@
+# Nordnet Finland securities credit (kaupankäyntiluotto / Superluotto), from its public pages, checked 2026-10-12:
+# nordnet.fi/palvelut/sijoituslaina and /palvelut/sijoituslaina/lainoitusasteet. Review when Nordnet changes rates.
+domain: nordnet_credit
+year: 2026
+version: "1"
+source: "nordnet.fi/palvelut/sijoituslaina, nordnet.fi/palvelut/sijoituslaina/lainoitusasteet (2026-10-12)"
+
+# yearly interest by Superluotto tier; the newest `from` on or before a date applies
+rates:
+  base:
+    - {from: "2026-01-01", rate: "0.0485"}
+  hopea:
+    - {from: "2026-01-01", rate: "0.0449"}
+    - {from: "2026-10-15", rate: "0.0465"}
+  kulta:
+    - {from: "2026-01-01", rate: "0.0394"}
+    - {from: "2026-10-15", rate: "0.0444"}
+
+# all three conditions must hold; weights are over the market value of holdings with a collateral rate above 0
+tiers:
+  kulta: {max_stock_or_etf: "0.20", max_fund: "0.60", max_loan_to_collateral: "0.20"}
+  hopea: {max_stock_or_etf: "0.25", max_fund: "0.75", max_loan_to_collateral: "0.60"}
+
+collateral:
+  max_rate: "0.90"
+  fund_counts_as: 3            # a fund counts as three holdings when measuring the largest holding
+  bonus_needs_largest_below: "0.50"
+  # hajautuslisä: rows = holdings' average original collateral rate; columns = the largest holding's share of the
+  # market value (up to 10 %, 20 %, 30 %, 40 %, above). Orientation fixed by Nordnet's example: 70 % shares reach
+  # 85 % when no share is over 10 % of the portfolio.
+  bonus_columns: ["0.10", "0.20", "0.30", "0.40", "1.00"]
+  bonus_table:
+    "0.10": ["0.40", "0.40", "0.30", "0.20", "0.10"]
+    "0.20": ["0.45", "0.45", "0.35", "0.30", "0.20"]
+    "0.30": ["0.55", "0.50", "0.45", "0.40", "0.30"]
+    "0.40": ["0.60", "0.55", "0.50", "0.45", "0.40"]
+    "0.50": ["0.70", "0.65", "0.60", "0.55", "0.50"]
+    "0.60": ["0.80", "0.75", "0.70", "0.65", "0.60"]
+    "0.70": ["0.85", "0.80", "0.80", "0.75", "0.75"]
+    "0.80": ["0.85", "0.85", "0.85", "0.80", "0.80"]
+    "0.85": ["0.90", "0.90", "0.85", "0.85", "0.85"]
+
+# over the collateral value (ylilainoitus) the statutory late-payment rate is charged on the excess on top, and the
+# customer must restore it; Nordnet may sell holdings to do so
+over_limit: "Customer must restore; penalty interest (viivästyskorko) on the excess; Nordnet may realise holdings"

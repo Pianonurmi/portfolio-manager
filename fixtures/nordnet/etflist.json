@@ -1,0 +1,234 @@
+{
+ "rows": 3,
+ "total_hits": 3,
+ "results": [
+  {
+   "instrument_info": {
+    "instrument_id": 17399602,
+    "name": "Vanguard LifeStrategy 80% Equity UCITS ETF - (EUR) Acc",
+    "long_name": "Vanguard LifeStrategy 80% Equity UCITS ETF - (EUR) Acc",
+    "symbol": "V80A",
+    "instrument_group_type": "PAR",
+    "instrument_type_hierarchy": "WNT/PAR/UETF",
+    "instrument_type": "UETF",
+    "isin": "IE00BMVB5R75",
+    "currency": "EUR",
+    "price_unit": "EUR",
+    "clearing_place": "PERS_DE",
+    "is_tradable": true,
+    "instrument_pawn_percentage": 85,
+    "is_shortable": false,
+    "issuer_id": 252119,
+    "issuer_name": "Vanguard",
+    "is_monthly_saveable": true,
+    "is_monthly_save_dask": false,
+    "mifid2_id": 0
+   },
+   "market_info": {
+    "market_id": 4,
+    "market_sub_id": 51,
+    "identifier": "V80A",
+    "tick_size_id": 34832655
+   },
+   "historical_returns_info": {
+    "yield_1d": 0.32,
+    "yield_1w": 1.04,
+    "yield_1m": 2.94,
+    "yield_3m": 2.89,
+    "yield_ytd": 14.6,
+    "yield_1y": 17.36,
+    "yield_3y": 55.76,
+    "yield_5y": 55.62,
+    "yield_max": 80.54,
+    "realtime": false
+   },
+   "fund_info": {
+    "fund_type": "Yhdistelmä",
+    "fund_category": "Aggressive Allocation",
+    "fund_universe_ids": [],
+    "fund_admin_company": "Vanguard Group (Ireland) Limited",
+    "fund_low_carbon": false,
+    "fund_nordnet_selection": false,
+    "fund_ms_rating": 5,
+    "fund_total_market_value": 1251509444,
+    "fund_esg_score": 19,
+    "fund_yearly_fee": 0.25,
+    "fund_calculated_fee": 0.25,
+    "fund_total_fee": 0.28,
+    "fund_raw_risk": 3,
+    "fund_risk_group": "Keskim.",
+    "fund_start_date": 1607428800000,
+    "fund_branding_company": "Vanguard",
+    "fund_dividend_strategy": "Kasvuosuus",
+    "fund_raw_sfdr": 6,
+    "fund_sfdr_article": "Artikla 6"
+   },
+   "exchange_info": {
+    "exchange_country": "DE",
+    "exchanges": []
+   },
+   "annual_growth_info": {
+    "annual_growth_1y": 17.36,
+    "annual_growth_3y": 15.92,
+    "annual_growth_5y": 9.25
+   },
+   "statistical_info": {
+    "statistics_timestamp": 1791806645223,
+    "number_of_owners": 212
+   },
+   "key_ratios_info": {}
+  },
+  {
+   "instrument_info": {
+    "instrument_id": 16309430,
+    "name": "iShares Core MSCI World UCITS ETF USD (Acc)",
+    "long_name": "iShares Core MSCI World UCITS ETF USD (Acc)",
+    "symbol": "EUNL",
+    "instrument_group_type": "PAR",
+    "instrument_type_hierarchy": "WNT/PAR/UETF",
+    "instrument_type": "UETF",
+    "isin": "IE00B4L5Y983",
+    "currency": "EUR",
+    "price_unit": "EUR",
+    "clearing_place": "PERS_DE",
+    "is_tradable": true,
+    "instrument_pawn_percentage": 80,
+    "is_shortable": false,
+    "issuer_id": 251367,
+    "issuer_name": "iShares",
+    "is_monthly_saveable": true,
+    "is_monthly_save_dask": true,
+    "mifid2_id": 0
+   },
+   "market_info": {
+    "market_id": 4,
+    "market_sub_id": 51,
+    "identifier": "EUNL",
+    "tick_size_id": 34832654
+   },
+   "historical_returns_info": {
+    "yield_1d": 0.47,
+    "yield_1w": 1.7,
+    "yield_1m": 4.44,
+    "yield_3m": 4.84,
+    "yield_ytd": 18.32,
+    "yield_1y": 22.55,
+    "yield_3y": 70.26,
+    "yield_5y": 81.45,
+    "yield_10y": 241.83,
+    "yield_max": 668.48,
+    "realtime": false
+   },
+   "fund_info": {
+    "fund_type": "Osake",
+    "fund_category": "Global Equity Large Cap",
+    "fund_universe_ids": [],
+    "fund_admin_company": "BlackRock Asset Management Ireland - ETF",
+    "fund_low_carbon": false,
+    "fund_nordnet_selection": false,
+    "fund_ms_rating": 5,
+    "fund_total_market_value": 152451043948,
+    "fund_esg_score": 19,
+    "fund_yearly_fee": 0.2,
+    "fund_calculated_fee": 0.2,
+    "fund_total_fee": 0.2,
+    "fund_raw_risk": 4,
+    "fund_risk_group": "Keskim.",
+    "fund_start_date": 1253880000000,
+    "fund_branding_company": "iShares",
+    "fund_dividend_strategy": "Kasvuosuus",
+    "fund_raw_sfdr": 6,
+    "fund_sfdr_article": "Artikla 6"
+   },
+   "exchange_info": {
+    "exchange_country": "DE",
+    "exchanges": []
+   },
+   "annual_growth_info": {
+    "annual_growth_1y": 22.55,
+    "annual_growth_3y": 19.41,
+    "annual_growth_5y": 12.66,
+    "annual_growth_10y": 13.08
+   },
+   "statistical_info": {
+    "statistics_timestamp": 1791806619724,
+    "number_of_owners": 101389
+   },
+   "key_ratios_info": {}
+  },
+  {
+   "instrument_info": {
+    "instrument_id": 16989063,
+    "name": "Amundi Global Aggregate Green Bond UCITS ETF Acc",
+    "long_name": "Amundi Global Aggregate Green Bond UCITS ETF Acc",
+    "symbol": "LYXGREENBOND",
+    "instrument_group_type": "PAR",
+    "instrument_type_hierarchy": "WNT/PAR/UETF",
+    "instrument_type": "UETF",
+    "isin": "LU1563454310",
+    "currency": "SEK",
+    "price_unit": "SEK",
+    "clearing_place": "VPC",
+    "is_tradable": true,
+    "instrument_pawn_percentage": 70,
+    "is_shortable": false,
+    "issuer_id": 251365,
+    "issuer_name": "Multi Units Luxembourg",
+    "is_monthly_saveable": false,
+    "is_monthly_save_dask": false,
+    "mifid2_id": 0
+   },
+   "market_info": {
+    "market_id": 11,
+    "market_sub_id": 4693,
+    "identifier": "166308",
+    "tick_size_id": 14097
+   },
+   "historical_returns_info": {
+    "yield_1d": -0.07,
+    "yield_1w": -0.13,
+    "yield_1m": 0.19,
+    "yield_3m": -0.75,
+    "yield_ytd": 2.43,
+    "yield_1y": 0.45,
+    "yield_3y": 4.9,
+    "yield_5y": -2.25,
+    "yield_max": 6.17,
+    "realtime": false
+   },
+   "fund_info": {
+    "fund_type": "Korko",
+    "fund_category": "Global Fixed Income",
+    "fund_universe_ids": [],
+    "fund_admin_company": "Amundi Luxembourg S.A.",
+    "fund_low_carbon": false,
+    "fund_nordnet_selection": false,
+    "fund_ms_rating": 3,
+    "fund_total_market_value": 395037172,
+    "fund_esg_score": 16,
+    "fund_yearly_fee": 0.25,
+    "fund_calculated_fee": 0.25,
+    "fund_total_fee": 0.27,
+    "fund_raw_risk": 3,
+    "fund_risk_group": "Keskim.",
+    "fund_start_date": 1487678400000,
+    "fund_branding_company": "Amundi",
+    "fund_dividend_strategy": "Kasvuosuus",
+    "fund_raw_sfdr": 8,
+    "fund_sfdr_article": "Artikla 8"
+   },
+   "exchange_info": {
+    "exchange_country": "SE",
+    "exchanges": []
+   },
+   "annual_growth_info": {
+    "annual_growth_1y": 0.45
+   },
+   "statistical_info": {
+    "statistics_timestamp": 1791806654916,
+    "number_of_owners": 15
+   },
+   "key_ratios_info": {}
+  }
+ ]
+}

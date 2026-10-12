@@ -1,0 +1,28 @@
+"""Domain modules. Each module may provide `api.router` and `jobs` (registered on import)."""
+
+MODULES = [
+    "core",
+    "ledger",
+    "ingest",
+    "pricing",
+    "portfolio",
+    "networth",
+    "cashflow",
+    "crypto",
+    "alerts",
+    "tax",
+    "documents",
+    "planning",
+    "life",
+    "subscriptions",
+    "vehicles",
+    "home",
+    "goals",
+    "screener",
+    "hedging",
+    "cash",
+    "calendar",
+    "health",
+    "ai",
+    "exports",
+]

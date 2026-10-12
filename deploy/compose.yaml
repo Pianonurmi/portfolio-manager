@@ -1,0 +1,99 @@
+# Portfolio Manager on a headless home server.
+# Only `web` publishes a port: plain HTTP on the LAN IP. TLS terminates at a reverse proxy on the LAN.
+# api/worker/db sit on an internal network with no internet route; `egress` is their only way out.
+name: portfolio-manager
+
+x-app: &app
+  build: {context: ../backend, target: prod}
+  image: portfolio-manager-api:latest
+  restart: unless-stopped
+  env_file: .env
+  environment:
+    PM_DATABASE_URL: postgresql+psycopg://pm:${POSTGRES_PASSWORD}@db:5432/pm
+    PM_RULES_DIR: /srv/rules
+    PM_OUTBOUND_ALLOWLIST: ${PM_OUTBOUND_ALLOWLIST}
+    PM_LAN_ALLOWLIST: ${PM_LAN_ALLOWLIST:-[]}
+    HTTPS_PROXY: http://egress:3128
+    HTTP_PROXY: http://egress:3128
+    NO_PROXY: db,api,localhost,127.0.0.1
+    TZ: Europe/Helsinki
+  volumes:
+    - ../rules:/srv/rules:ro
+    - imports:/srv/imports
+  networks: [internal]
+  depends_on:
+    db: {condition: service_healthy}
+    egress: {condition: service_started}
+
+services:
+  web:
+    build: {context: .., dockerfile: deploy/web.Dockerfile}
+    image: portfolio-manager-web:latest
+    restart: unless-stopped
+    ports:
+      - "${PM_BIND:?set PM_BIND in deploy/.env}:${PM_PORT:-8640}:80"
+    networks: [edge, internal]
+    depends_on:
+      api: {condition: service_healthy}
+    mem_limit: 128m
+
+  api:
+    <<: *app
+    mem_limit: 512m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3).status == 200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  worker:
+    <<: *app
+    command: ["python", "-m", "app.worker"]
+    networks: [internal, mail]  # mail: SMTP to private addresses only (pm-firewall.service)
+    mem_limit: 768m
+    depends_on:
+      api: {condition: service_healthy}
+      egress: {condition: service_started}
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pm
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: pm
+    command: ["postgres", "-c", "shared_buffers=256MB", "-c", "work_mem=16MB", "-c", "max_connections=40"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    networks: [internal]
+    mem_limit: 768m
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "pm"]
+      interval: 5s
+      retries: 20
+
+  egress:
+    build: {context: ./egress}
+    image: portfolio-manager-egress:latest
+    restart: unless-stopped
+    environment:
+      PM_OUTBOUND_ALLOWLIST: ${PM_OUTBOUND_ALLOWLIST}
+      PM_LAN_ALLOWLIST: ${PM_LAN_ALLOWLIST:-[]}
+    networks: [internal, outbound]
+    mem_limit: 64m
+
+networks:
+  edge:
+    ipam: {config: [{subnet: "${PM_SUBNET_EDGE:-172.30.86.0/24}"}]}
+  internal:
+    internal: true
+    ipam: {config: [{subnet: "${PM_SUBNET_INTERNAL:-172.30.87.0/24}"}]}
+  outbound:
+    ipam: {config: [{subnet: "${PM_SUBNET_OUTBOUND:-172.30.88.0/24}"}]}
+
+  mail:
+    ipam: {config: [{subnet: "${PM_SUBNET_MAIL:-172.30.89.0/24}"}]}
+
+volumes:
+  pgdata:
+  imports:

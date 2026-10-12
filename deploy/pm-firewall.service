@@ -1,0 +1,14 @@
+[Unit]
+Description=Portfolio Manager LAN-only rules (DOCKER-USER)
+After=docker.service
+Requires=docker.service
+PartOf=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Adjust to where the repository is checked out.
+ExecStart=/opt/portfolio-manager/deploy/firewall/pm-lan-only.sh
+
+[Install]
+WantedBy=multi-user.target docker.service

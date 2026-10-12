@@ -1,0 +1,56 @@
+# Finnish tax parameters from tax year 2024 on (until a later file), used for estimates and simulations only.
+# Checked against vero.fi and Veronmaksajat in October 2026. Review every January.
+domain: tax
+year: 2024
+version: "2"
+source: "vero.fi / Tuloverolaki, Perintö- ja lahjaverolaki, Varainsiirtoverolaki"
+
+capital_income:
+  # interest on debt taken for taxable income (e.g. shares, also a margin loan) is deducted from capital income;
+  # what is left over is credited against earned-income tax (alijäämähyvitys), vero.fi 2026
+  investment_interest_deductible: true
+  deficit_credit: {rate: "0.30", max: 1400}
+  brackets:            # rate applies to capital income above `from`
+    - {from: 0, rate: "0.30"}
+    - {from: 30000, rate: "0.34"}
+  loss_carry_forward_years: 5
+  small_disposals_exempt_total_proceeds: 1000   # annual sale prices ≤ this: gains tax-free
+  small_disposals_loss_limit_total_cost: 1000    # losses not deductible if sale prices and costs are both ≤ this
+
+deemed_acquisition_cost:      # hankintameno-olettama
+  held_under_10_years: "0.20"
+  held_10_years_or_more: "0.40"
+
+dividends:
+  listed_taxable_share: "0.85"          # 85 % of a listed company's dividend is taxable capital income
+  finnish_withholding_listed: "0.255"   # withholding on Finnish listed dividends paid to residents
+  foreign_credit_cap:                   # foreign withholding Finland credits, as a share of the gross dividend
+    default: "0.15"                     # the usual treaty rate; anything withheld above it is reclaimed abroad
+    CH: "0.10"                          # Switzerland withholds 35 %, the Finnish treaty leaves 10 %
+
+ost:                           # osakesäästötili
+  deposit_cap: 100000          # raised from 50 000 € on 1.1.2024
+
+gift_tax:                      # class I, gifts received 2017–2025 (vero.fi lahjaverolaskuri)
+  tax_free_below: 5000         # per donor per recipient within 3 years
+  window_years: 3
+  class_1_brackets:            # [from, base tax at from, marginal rate]
+    - {from: 5000, base: 100, rate: "0.08"}
+    - {from: 25000, base: 1700, rate: "0.10"}
+    - {from: 55000, base: 4700, rate: "0.12"}
+    - {from: 200000, base: 22100, rate: "0.15"}
+    - {from: 1000000, base: 142100, rate: "0.17"}
+
+inheritance_tax:               # class I, deaths 2017–2025 (Veronmaksajat: perintöveroluokat ja -asteikot)
+  tax_free_below: 20000
+  class_1_brackets:
+    - {from: 20000, base: 100, rate: "0.07"}
+    - {from: 40000, base: 1500, rate: "0.10"}
+    - {from: 60000, base: 3500, rate: "0.13"}
+    - {from: 200000, base: 21700, rate: "0.16"}
+    - {from: 1000000, base: 149700, rate: "0.19"}
+
+transfer_tax:                  # varainsiirtovero from 1.1.2024
+  housing_shares: "0.015"
+  real_estate: "0.03"
+  listed_securities: "0"

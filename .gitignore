@@ -1,0 +1,10 @@
+.playwright-mcp/
+deploy/.env
+frontend/node_modules/
+frontend/dist/
+__pycache__/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+*.dump
+frontend/tsconfig.tsbuildinfo

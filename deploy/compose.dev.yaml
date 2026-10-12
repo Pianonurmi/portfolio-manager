@@ -1,0 +1,32 @@
+# Development helpers: a throwaway Postgres and a tooling container. Not used in production.
+name: pm-dev
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment: {POSTGRES_USER: pm, POSTGRES_PASSWORD: pm, POSTGRES_DB: pm}
+    tmpfs: [/var/lib/postgresql/data]
+    networks: [dev]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "pm"]
+      interval: 2s
+      retries: 20
+
+  tools:
+    build: {context: ../backend, target: dev}
+    environment:
+      PM_DATABASE_URL: postgresql+psycopg://pm:pm@db:5432/pm
+      PM_TEST_DATABASE_URL: postgresql+psycopg://pm:pm@db:5432/pm_test
+      PM_MASTER_KEY: "dGVzdC1rZXktdGVzdC1rZXktdGVzdC1rZXktdGVzdDE="
+      PM_RULES_DIR: /srv/rules
+    volumes:
+      - ../backend:/srv/app
+      - ../rules:/srv/rules:ro
+      - ../fixtures:/srv/fixtures:ro
+    user: "1000:1000"
+    depends_on: {db: {condition: service_healthy}}
+    networks: [dev]
+    entrypoint: ["sleep", "infinity"]
+
+networks:
+  dev: {}

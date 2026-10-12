@@ -1,0 +1,73 @@
+[project]
+name = "portfolio-manager"
+version = "1.12.1"
+description = "Self-hosted personal finance and investment suite"
+requires-python = ">=3.12"
+dependencies = [
+  "fastapi==0.115.12",
+  "uvicorn[standard]==0.34.2",
+  "sqlalchemy==2.0.40",
+  "alembic==1.15.2",
+  "psycopg[binary]==3.2.6",
+  "pydantic==2.11.3",
+  "pydantic-settings==2.9.1",
+  "argon2-cffi==23.1.0",
+  "pyotp==2.9.0",
+  "httpx==0.28.1",
+  "apscheduler==3.11.0",
+  "cryptography==44.0.2",
+  "pyyaml==6.0.2",
+  "python-multipart==0.0.20",
+  "numpy==2.2.5",
+  "scipy==1.15.2",
+  "pypdfium2==4.30.1",
+  "pillow==11.2.1",
+  "openpyxl==3.1.5",
+  "fpdf2==2.8.3",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.3.5",
+  "ruff==0.11.6",
+  "mypy==1.15.0",
+  "types-PyYAML==6.0.12.20250402",
+  "import-linter==2.3",
+]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "DTZ"]
+ignore = ["B008", "SIM108"]
+
+[tool.ruff.lint.per-file-ignores]
+"app/modules/life/api.py" = ["E501"]  # HTML template lines
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.importlinter]
+root_package = "app"
+
+[[tool.importlinter.contracts]]
+name = "platform does not depend on modules"
+type = "forbidden"
+source_modules = ["app.platform"]
+forbidden_modules = ["app.modules"]

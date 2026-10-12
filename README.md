@@ -145,6 +145,17 @@ docker compose logs -f worker       # scheduled jobs
 - Ingress is restricted to private ranges by `deploy/firewall/pm-lan-only.sh` (systemd unit `pm-firewall.service`; set the path in `ExecStart` to your checkout).
 - First run: open the app, create the owner account, then add people and accounts in Settings and import a Nordnet transaction export under Imports.
 
+## Try it with demo data
+
+`scripts/demo-seed.py` fills an empty instance with an invented household (the one in the screenshots): people, Nordnet accounts with seven years of monthly ETF saving, a home and a mortgage. Run it against the throwaway test stack, never against your real instance (it stops if an owner already exists):
+
+```sh
+cd deploy && PM_BIND=127.0.0.1 ./init-env.sh && ./e2e.sh up && cd ..
+python3 scripts/demo-seed.py http://127.0.0.1:8650
+# open http://127.0.0.1:8650 and sign in as "demo" / "demo-password-123"; prices arrive within a few minutes
+./deploy/e2e.sh down   # removes the demo, including its data
+```
+
 ## Development
 
 `deploy/compose.dev.yaml` (project `pm-dev`) starts a throwaway Postgres on tmpfs and a `tools` container with the backend source mounted at `/srv/app`.
@@ -192,6 +203,7 @@ frontend/    Vite + React + TypeScript SPA (src/screens, src/components)
 deploy/      compose files, Caddyfile, egress proxy, firewall unit, backup/restore/e2e scripts
 rules/       Finnish tax rule tables per year (YAML)
 fixtures/    sample exports used by tests
+scripts/     demo data generator
 ```
 
 ## Disclaimer

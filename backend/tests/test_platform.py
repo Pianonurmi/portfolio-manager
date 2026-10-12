@@ -95,6 +95,9 @@ def test_missed_runs_are_found(db: Session) -> None:
 
     tz = ZoneInfo("Europe/Helsinki")
     monday = datetime(2026, 10, 12, 8, 0, tzinfo=tz)
+    assert "test.weekly" not in missed_runs(db, monday, tz)  # never ran: a fresh install waits for the schedule
+    db.add(JobRun(job="test.weekly", status="ok", trigger="schedule", created_at=monday - timedelta(days=7)))
+    db.flush()
     missed = missed_runs(db, monday, tz)
     assert "test.weekly" in missed and "test.often" not in missed  # the half-hourly job just waits for its slot
     db.add(JobRun(job="test.weekly", status="ok", trigger="schedule", created_at=monday - timedelta(minutes=55)))

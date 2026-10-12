@@ -4,6 +4,14 @@ All notable changes to this project. Versions follow Semantic Versioning; each r
 
 ## [Unreleased]
 
+### Added
+- `scripts/demo-seed.py` fills an empty instance with an invented demo household, to try the app.
+
+### Fixed
+- Importing on a fresh install no longer fails when a background job adds the same fund at the same moment.
+- A fresh install no longer runs every scheduled job at once on first start; only runs missed during a restart are caught up.
+- `deploy/e2e.sh` builds its own images, so a test run never replaces the images production starts from.
+
 ## [1.12.1] - 2026-10-12
 
 Fixes to the tax estimate, scheduled jobs that ran a day late, and a worker that can no longer fall silently behind.

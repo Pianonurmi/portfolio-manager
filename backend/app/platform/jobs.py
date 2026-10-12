@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, tzinfo
 from typing import Literal
 
 from apscheduler.triggers.cron import CronTrigger
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.platform.db import session_factory, utcnow
@@ -152,7 +152,7 @@ def missed_runs(db: Session, now: datetime, tz: tzinfo, lookback: timedelta = ti
     """Scheduled jobs whose latest due time in the lookback passed without a run, e.g. while the worker restarted.
 
     The scheduler keeps its plan in memory, so a run due during a restart is lost. Jobs due again within the hour
-    are left to their next slot.
+    are left to their next slot, and jobs that never ran (a fresh install) wait for their first schedule.
     """
     out = []
     for jd in REGISTRY.values():
@@ -164,6 +164,7 @@ def missed_runs(db: Session, now: datetime, tz: tzinfo, lookback: timedelta = ti
             due, nxt = nxt, trigger.get_next_fire_time(nxt, nxt + timedelta(seconds=1))
         if due is None or (nxt is not None and nxt - due <= timedelta(hours=1)):
             continue
-        if db.scalar(select(JobRun.id).where(JobRun.job == jd.name, JobRun.created_at >= due).limit(1)) is None:
+        last = db.scalar(select(func.max(JobRun.created_at)).where(JobRun.job == jd.name))
+        if last is not None and last < due:
             out.append(jd.name)
     return out

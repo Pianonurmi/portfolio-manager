@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from sqlalchemy import delete, func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.modules.core.models import Account, Instrument
@@ -512,9 +513,15 @@ def create_missing_instruments(db: Session, batch: ImportBatch) -> int:
                 asset_class="equity",
                 meta={"created_from": f"import {batch.id}"},
             )
-            db.add(inst)
-            db.flush()
-            created += 1
+            try:
+                with db.begin_nested():
+                    db.add(inst)
+                    db.flush()
+                created += 1
+            except IntegrityError:  # another process (e.g. the benchmarks job) added the same ISIN meanwhile
+                inst = db.scalar(select(Instrument).where(Instrument.isin == p["isin"]))
+                if inst is None:
+                    raise
         set_mapping(db, batch.source, "instrument", key, str(inst.id))
     resolve_batch(db, batch)
     return created

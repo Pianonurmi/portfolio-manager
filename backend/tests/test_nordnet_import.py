@@ -277,3 +277,38 @@ def test_nordnet_corporate_actions_and_statement_bookings_replaced(auth_client: 
     assert c.post(f"/api/undo/{res['undo_id']}").status_code == 204
     db.expire_all()
     assert db.get(Transaction, stmt.id).voided_at is None
+
+
+def test_instrument_added_meanwhile_is_reused(auth_client: TestClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    from sqlalchemy import select
+
+    from app.modules.core.models import Instrument
+    from app.platform.db import session_factory
+
+    c = auth_client
+    _setup(c)
+    b = c.post("/api/imports", files={"file": ("t.csv", (FIX / "transactions-fi.csv").read_bytes(), "text/csv")}).json()
+    isins = {
+        "iShares Core MSCI World": "IE00B4L5Y983",
+        "Sampo": "FI4000552500",
+        "Kone": "FI0009013403",
+        "Nordnet Indeksirahasto Suomi": "FI4000415252",
+        "Nokia": "FI0009000681",
+        "NVIDIA": "US67066G1040",
+    }
+    real, added = nordnet.guess_instrument_type, []
+
+    def racing(name: str) -> str:
+        if not added:  # another process (the benchmarks job) commits the same ISIN between lookup and insert
+            isin = next(i for n, i in isins.items() if name.startswith(n))
+            with session_factory()() as other:
+                other.add(Instrument(type="etf", name="added meanwhile", isin=isin, currency="EUR"))
+                other.commit()
+            added.append(isin)
+        return real(name)
+
+    monkeypatch.setattr(nordnet, "guess_instrument_type", racing)
+    assert c.post(f"/api/imports/{b['id']}/create-instruments").status_code == 200
+    with session_factory()() as db:
+        same = db.scalars(select(Instrument).where(Instrument.isin == added[0])).all()
+    assert [i.name for i in same] == ["added meanwhile"]

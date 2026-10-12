@@ -1,0 +1,6 @@
+# Used by e2e.sh: own image names, so a test build never replaces the images production runs.
+services:
+  web: {image: portfolio-manager-e2e-web:latest}
+  api: {image: portfolio-manager-e2e-api:latest}
+  worker: {image: portfolio-manager-e2e-api:latest}
+  egress: {image: portfolio-manager-e2e-egress:latest}

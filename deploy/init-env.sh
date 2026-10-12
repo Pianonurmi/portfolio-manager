@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 # Usage: PM_BIND=<this host's LAN address> [PM_LLM_URL=http://<llm-host>:<port>] ./init-env.sh
-: "${PM_BIND:?set PM_BIND to this host's LAN address, e.g. PM_BIND=192.168.1.10 ./init-env.sh}"
+: "${PM_BIND:?set PM_BIND to the LAN address of this host, e.g. PM_BIND=192.168.1.10 ./init-env.sh}"
 if [ -f .env ]; then echo ".env exists, leaving it alone"; exit 0; fi
 key=$(python3 -c 'import base64,os;print(base64.urlsafe_b64encode(os.urandom(32)).decode())')
 pw=$(python3 -c 'import secrets;print(secrets.token_urlsafe(24))')

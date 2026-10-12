@@ -1,72 +1,120 @@
+<div align="center">
+
 # Portfolio Manager
 
-A self-hosted personal finance suite for a Finnish household. It keeps a double-entry ledger of investment accounts, values the portfolio daily, tracks net worth (property, loans, crypto, manual assets), syncs cash flow from YNAB or Actual Budget, checks and forecasts Finnish tax, simulates retirement and other plans, and reads bank and broker statements with a local language model. It also holds a few "life" modules (subscriptions, vehicles, home maintenance, insurance, estate package).
+**A self-hosted personal finance suite for a Finnish household.**<br>
+Ledger · portfolio analytics · net worth · Finnish tax · planning · local AI
 
-It runs on a home server, is reachable only from the LAN or VPN, and sends data out only to an allowlist of hosts. It is read-only towards institutions: it never moves money or places trades. It has a single owner login.
+[![Licence: PolyForm Noncommercial](https://img.shields.io/badge/licence-PolyForm%20Noncommercial%201.0.0-blue)](LICENSE)
+![Python 3.12](https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![React 19](https://img.shields.io/badge/react-19-61DAFB?logo=react&logoColor=black)
+![PostgreSQL 16](https://img.shields.io/badge/postgres-16-4169E1?logo=postgresql&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/docker-compose-2496ED?logo=docker&logoColor=white)
+
+<img src=".github/screenshots/home.png" alt="Home: net worth, investments, home equity, debt and allocation at a glance" width="900">
+
+</div>
+
+Portfolio Manager keeps one trustworthy picture of a family's money: a double-entry ledger of every investment account, daily valuations, net worth with property and loans, Finnish tax, and plans for the decades ahead. It runs on your own server, stays inside your home network, and reads statements with a language model that also runs at home.
+
+> **Private by design.** Reachable only from your LAN or VPN. Read-only towards banks and brokers: it never moves money or places trades. It talks to an explicit allowlist of public data sources and logs every outbound call. AI runs on your own local model; no financial data goes to a cloud AI.
+
+<sub>All screenshots show an invented demo household.</sub>
+
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><img src=".github/screenshots/portfolio.png" alt="Portfolio returns and holdings"><br><b>Portfolio</b>: time- and money-weighted returns, holdings per account with FIFO cost and unrealised gains.</td>
+    <td width="50%"><img src=".github/screenshots/xray.png" alt="Portfolio X-ray"><br><b>X-ray</b>: what you really own once every ETF and fund is opened up, and what it costs per year.</td>
+  </tr>
+  <tr>
+    <td><img src=".github/screenshots/benchmarks.png" alt="Benchmarks"><br><b>Benchmarks and risk</b>: your return against world, S&amp;P 500, emerging markets and bond indices.</td>
+    <td><img src=".github/screenshots/net-worth.png" alt="Net worth"><br><b>Net worth</b>: balance sheet at ownership share, what changed and why, history.</td>
+  </tr>
+  <tr>
+    <td><img src=".github/screenshots/planning.png" alt="Planning studio"><br><b>Planning</b>: Monte Carlo retirement plans with live what-if sliders and scenario comparison.</td>
+    <td><img src=".github/screenshots/etfs.png" alt="ETF screener"><br><b>ETF screener</b>: about 4 600 European UCITS ETFs, filtered to what your broker actually sells.</td>
+  </tr>
+</table>
 
 ## Features
 
-Portfolio
+<details open>
+<summary><b>Portfolio and analytics</b></summary>
+
 - Double-entry ledger with raw-first imports: every imported row is kept with a content hash, imports are idempotent, and corrections supersede rather than delete.
-- Nordnet CSV import with staging, review, instrument mapping, corporate actions (splits, exchanges, redemptions and others) and row-level reconciliation.
-- Holdings, FIFO cost basis, TWR and XIRR per account, person and household, dividends, and a dashboard per child.
-- Allocation targets, drift and tax-aware rebalancing.
-- Portfolio X-ray: true asset class, regions, countries, sectors, size, style, bond duration and credit, and fund costs (TER) in €/year, looking through every ETF and fund with Morningstar data.
+- Nordnet CSV import with staging, review, instrument mapping, corporate actions (splits, exchanges, redemptions) and row-level reconciliation.
+- Holdings, FIFO cost basis, TWR and XIRR with dividends per account, person and household; income forecast; a dashboard per child.
+- X-ray: true asset class, regions, countries, sectors, size, style, bond duration and credit, and fund costs (TER) in €/year, looking through every ETF and fund.
+- Risk and correlations, benchmarks against a dozen indices, Fama-French factor analysis and portfolio optimisation.
+- Allocation advisor that derives targets from the loss you can accept, glide paths, tax-aware rebalancing and a buy-only new-money plan with real broker fees.
+- ETF screener with Nordnet availability; candidate ETFs feed the plans and the optimiser.
+- Leverage (securities credit) and hedging without selling: puts, collars, mini futures and bear certificates compared on the same simulated paths.
+</details>
 
-Prices and FX
-- Daily prices from Yahoo and Morningstar (lt.morningstar.com), ECB exchange rates, a price coverage panel in Settings, and stale or missing prices flagged instead of shown as zero.
+<details>
+<summary><b>Net worth, cash and property</b></summary>
 
-Net worth
 - Household and per-person balance sheet with ownership shares, history and change decomposition.
-- Property, housing-company loan, mortgage and other manual assets and liabilities; housing value from Statistics Finland indices; loan what-if scenarios.
+- Property, housing-company loan, mortgage and other manual assets and liabilities; housing value from Statistics Finland indices; loan what-if scenarios; home equity against securities credit.
+- Cash: ECB deposit and Euribor rates, your own offers, and an interest-ladder planner.
+- YNAB sync (optional push back) or Actual Budget, spending analytics, housing costs from budget categories.
+- Crypto: Kraken and Binance read-only APIs, public addresses, history imports (Kraken, Binance, Ledger Live, generic CSV).
+</details>
 
-Cash flow
-- YNAB sync (optional push back) or Actual Budget as an alternative backend, balances into net worth, spending analytics, housing costs from budget categories.
+<details>
+<summary><b>Finnish tax</b></summary>
 
-Crypto
-- Kraken and Binance read-only API, public addresses, transaction history imports (Kraken ledger CSV, Binance statement, Ledger Live, generic CSV) and Finnish crypto tax views.
+- Rule tables per year in `rules/`: capital income brackets, deemed acquisition cost (hankintameno-olettama), osakesäästötili, small-disposal rule, loss carry-forward, gift and inheritance tax.
+- Year-to-date estimate with dividends, withholding and a country-by-country foreign tax credit capped at treaty rates.
+- Tax-loss harvesting before year end, and a crypto report laid out like OmaVero's virtual-currency form.
+</details>
 
-Tax
-- Finnish tax engine driven by rule tables per year (`rules/`): gains with the deemed cost, OST, small-disposal rule, gift and inheritance tax, year-to-date estimate.
+<details>
+<summary><b>Planning</b></summary>
 
-Planning
-- Pension (työeläke) estimate, deterministic and Monte Carlo retirement projection, life events, inheritances, scenario comparison, stress tests, fee analysis, backtests, tax-aware withdrawal order and new-money comparison.
+- Pension (työeläke) estimate, deterministic and Monte Carlo projections, life events and inheritances, scenario comparison and stress tests.
+- Contribution and withdrawal Monte Carlo on your own portfolio's history, tax-aware withdrawal order, fee analysis and backtests.
+</details>
 
-Local AI
-- Reads uploaded statements (PDF, scans, screenshots, CSV, Excel) page by page through an OpenAI-compatible gateway on the LAN, checks the result against the page text and totals, and books it only after review.
-- Extracts values from Paperless-ngx documents with the quoted source text, and explains plans in plain language.
+<details>
+<summary><b>Local AI</b></summary>
 
-Life and estate
-- Subscriptions detected from budget transactions, vehicles, home maintenance log, insurance register, estate package, shared timeline, search and attention list.
+- Reads uploaded statements (PDF, scans, screenshots, CSV, Excel) page by page through an OpenAI-compatible gateway on your LAN, checks the result against the page text and totals, and books it only after you review it.
+- Extracts values from Paperless-ngx documents with the quoted source text, reads fund factsheets, and explains plans in plain language.
+</details>
 
-Operations
-- Alerts and a weekly digest through Gotify and SMTP, Paperless-ngx links, tags and notes, data export, nightly backups, audit log and an outbound call log.
+<details>
+<summary><b>Life, estate and operations</b></summary>
+
+- Subscriptions detected from budget data, vehicles, home maintenance, insurance register, goals and habits, a calendar with .ics export, and a health log.
+- An encrypted emergency package (AES-256 PDF) for the family.
+- Alerts and a weekly digest through Gotify and SMTP, attention list, audit log, outbound call log, nightly backups with a restore test, and a worker heartbeat.
+- Keyboard-first interface with a command palette, dark and light themes, and an installable PWA.
+</details>
 
 ## Architecture
 
-A modular monolith: one FastAPI backend split into domain modules, one worker process for scheduled jobs, one Postgres database and a React single-page app. Five containers run under Docker Compose.
+A modular monolith: one FastAPI backend split into domain modules, one worker for scheduled jobs, PostgreSQL and a React single-page app, as five containers under Docker Compose.
 
-```
-   LAN / VPN
-       |
-  reverse proxy on the LAN (TLS)
-       | http
-  +----v-----+      +-----------------------+
-  | web      |----->| api (FastAPI)         |
-  | Caddy:   | /api |  modules: core ledger |
-  | SPA+proxy|      |  ingest pricing ...   |
-  +----------+      +-----+-----------+-----+
-   edge+internal          |           |
-                    +-----v----+  +---v-------+
-                    | db       |<-| worker    |
-                    | Postgres |  | jobs      |
-                    +----------+  +---+-------+
-                                      |  (internal network, no route out)
-                                +-----v-----+
-                                | egress    |  hostname allowlist
-                                | proxy     |  (HTTPS CONNECT only)
-                                +-----+-----+
-          ECB, Yahoo, Morningstar, Statistics Finland, YNAB, Kraken, Binance, CoinGecko
+```mermaid
+flowchart LR
+    user([Browser on LAN / VPN]) --> proxy[Reverse proxy<br/>TLS]
+    proxy -->|http| web[web<br/>Caddy: SPA + /api proxy]
+    subgraph internal [internal network: no route to the internet]
+        api[api<br/>FastAPI modules]
+        worker[worker<br/>scheduled jobs]
+        db[(PostgreSQL)]
+    end
+    web --> api
+    api --> db
+    worker --> db
+    api --> egress
+    worker --> egress
+    egress[egress proxy<br/>hostname allowlist] --> sources[ECB · Yahoo · Morningstar · Nordnet<br/>Statistics Finland · YNAB · Kraken · Binance]
+    worker -. LAN allowlist .-> lan[Local LLM · Gotify · Paperless-ngx]
 ```
 
 - `web` is the only published container: plain HTTP on the LAN address `PM_BIND:PM_PORT`. TLS ends at a reverse proxy on your LAN. It serves the built frontend and proxies `/api`.
@@ -78,7 +126,7 @@ A modular monolith: one FastAPI backend split into domain modules, one worker pr
 
 Backend modules are in `backend/app/modules/`: core, ledger, ingest, pricing, portfolio, networth, cashflow, crypto, tax, planning, documents, alerts, ai, exports, home, vehicles, subscriptions, life, ux. Frontend screens: Home, Portfolio, Net worth, Cash flow, Tax, Life, Imports, Planning, Kids, Household, Settings.
 
-## Running it
+## Quick start
 
 Production is `deploy/compose.yaml`.
 
@@ -111,7 +159,7 @@ cd frontend && npx tsc --noEmit     # frontend type check
 docker run --rm -u 1000:1000 -v "$PWD":/repo -w /repo/frontend -e HOME=/tmp node:22-alpine npx vitest run
 ```
 
-- `deploy/e2e.sh up` starts a throwaway copy of the production stack as project `pm-e2e`, bound to `127.0.0.1:8650` with its own volumes and subnets, so it can run next to production. `deploy/e2e.sh down` removes it, including volumes.
+- `deploy/e2e.sh up` starts a throwaway copy of the production stack as project `pm-e2e`, bound to `127.0.0.1:8650` with its own images, volumes and subnets, so it can run next to production. `deploy/e2e.sh down` removes it, including volumes.
 - Backend: Python 3.12+, FastAPI, SQLAlchemy 2, Alembic (`backend/migrations/`). Frontend: Vite, React, TypeScript.
 
 ## Data, backups and restore
